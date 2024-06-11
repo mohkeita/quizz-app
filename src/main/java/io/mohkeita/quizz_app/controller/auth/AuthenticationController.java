@@ -1,5 +1,7 @@
 package io.mohkeita.quizz_app.controller.auth;
 
+import io.mohkeita.quizz_app.dto.AuthenticationResponse;
+import io.mohkeita.quizz_app.dto.AuthenticationRequest;
 import io.mohkeita.quizz_app.dto.RegistrationRequest;
 import io.mohkeita.quizz_app.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,5 +26,12 @@ public class AuthenticationController {
     ) {
         service.register(request);
         return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(
+            @RequestBody @Valid AuthenticationRequest request
+    ) {
+        return ResponseEntity.ok(service.authenticate(request));
     }
 }

@@ -1,20 +1,26 @@
 package io.mohkeita.quizz_app.service;
 
+import io.mohkeita.quizz_app.dto.AuthenticationRequest;
+import io.mohkeita.quizz_app.dto.AuthenticationResponse;
 import io.mohkeita.quizz_app.dto.RegistrationRequest;
 import io.mohkeita.quizz_app.model.Token;
 import io.mohkeita.quizz_app.model.User;
 import io.mohkeita.quizz_app.repository.RoleRepository;
 import io.mohkeita.quizz_app.repository.TokenRepository;
 import io.mohkeita.quizz_app.repository.UserRepository;
+import io.mohkeita.quizz_app.security.JwtService;
 import io.mohkeita.quizz_app.service.mailjet.MailDataDto;
 import io.mohkeita.quizz_app.service.mailjet.MailJetServiceImp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -26,6 +32,8 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final MailJetServiceImp mailJetService;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
@@ -54,7 +62,7 @@ public class AuthenticationService {
 
         MailDataDto mailDatadto = new MailDataDto(user.getEmail(), user.fullName());
         // send email
-        mailJetService.sendSuccessfulEmail(mailDatadto, activationUrl);
+        mailJetService.sendSuccessfulEmail(mailDatadto, activationUrl, newToken);
     }
 
     private String generateAndSaveActivationToken(User user) {
@@ -79,5 +87,22 @@ public class AuthenticationService {
             codeBuilder.append(characters.charAt(randomIndex));
         }
         return codeBuilder.toString();
+    }
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        var auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        var claims = new HashMap<String, Object>();
+        var user = ((User)auth.getPrincipal());
+        claims.put("fullName", user.fullName());
+        var jwtToken = jwtService.generateToken(claims, user);
+        return AuthenticationResponse
+                .builder()
+                .token(jwtToken)
+                .build();
     }
 }

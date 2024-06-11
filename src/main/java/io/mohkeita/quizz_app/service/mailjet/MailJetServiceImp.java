@@ -20,7 +20,7 @@ public class MailJetServiceImp implements IMailJetService {
     @Value("${mailjet.senderEmail}")
     private String senderEmail;
 
-    public void sendSuccessfulEmail(MailDataDto mailDataDto, String confirmationLink) {
+    public void sendSuccessfulEmail(MailDataDto mailDataDto, String confirmationLink, String activationCode) {
         try {
 
             ClientOptions options = ClientOptions.builder()
@@ -46,7 +46,8 @@ public class MailJetServiceImp implements IMailJetService {
                                     .put(Emailv31.Message.TEMPLATELANGUAGE, true)
                                     .put(Emailv31.Message.SUBJECT, "Confirmation mail")
                                     .put(Emailv31.Message.VARIABLES, new JSONObject()
-                                            .put("name", "name")
+                                            .put("name", mailDataDto.getName())
+                                            .put("code_activation", activationCode)
                                             .put("confirmation_link", confirmationLink))));
             response = client.post(request);
             System.out.println(response.getStatus());
