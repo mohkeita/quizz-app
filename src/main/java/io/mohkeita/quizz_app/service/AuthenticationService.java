@@ -6,7 +6,10 @@ import io.mohkeita.quizz_app.model.User;
 import io.mohkeita.quizz_app.repository.RoleRepository;
 import io.mohkeita.quizz_app.repository.TokenRepository;
 import io.mohkeita.quizz_app.repository.UserRepository;
+import io.mohkeita.quizz_app.service.mailjet.MailDataDto;
+import io.mohkeita.quizz_app.service.mailjet.MailJetServiceImp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,9 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final MailJetServiceImp mailJetService;
+    @Value("${application.mailing.frontend.activation-url}")
+    private String activationUrl;
 
     public void register(RegistrationRequest request) {
 
@@ -45,7 +51,10 @@ public class AuthenticationService {
 
     private void sendValidationEmail(User user) {
         var newToken = generateAndSaveActivationToken(user);
+
+        MailDataDto mailDatadto = new MailDataDto(user.getEmail(), user.fullName());
         // send email
+        mailJetService.sendSuccessfulEmail(mailDatadto, activationUrl);
     }
 
     private String generateAndSaveActivationToken(User user) {
