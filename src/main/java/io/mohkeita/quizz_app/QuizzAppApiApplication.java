@@ -1,6 +1,7 @@
 package io.mohkeita.quizz_app;
 
 import io.mohkeita.quizz_app.model.Role;
+import io.mohkeita.quizz_app.model.RoleName;
 import io.mohkeita.quizz_app.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,7 +23,8 @@ public class QuizzAppApiApplication {
 			if (roleRepository.findByName("USER").isEmpty()) {
 				roleRepository.save(
 						Role.builder()
-								.name("USER").build()
+								.name(RoleName.USER)
+								.build()
 				);
 			}
 		};

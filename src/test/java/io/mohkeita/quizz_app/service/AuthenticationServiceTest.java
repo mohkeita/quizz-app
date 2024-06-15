@@ -10,6 +10,7 @@ import io.mohkeita.quizz_app.repository.RoleRepository;
 import io.mohkeita.quizz_app.repository.TokenRepository;
 import io.mohkeita.quizz_app.repository.UserRepository;
 import io.mohkeita.quizz_app.security.JwtService;
+import io.mohkeita.quizz_app.service.mailjet.MailJetServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +45,9 @@ class AuthenticationServiceTest {
 
     @Mock
     private TokenRepository tokenRepository;
+
+    @Mock
+    private MailJetServiceImp mailJetService;
 
     @Mock
     private PasswordEncoder passwordEncoder;
