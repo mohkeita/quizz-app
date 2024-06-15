@@ -26,6 +26,8 @@ public class QuizController {
         Quiz quiz = new Quiz();
         quiz.setTitle(quizDTO.getTitle());
         quiz.setDescription(quizDTO.getDescription());
+        quiz.setCategory(quizDTO.getCategory());
+        quiz.setDifficultyLevel(quizDTO.getDifficultyLevel());
         quiz.setQuestions(quizDTO.getQuestions().stream().map(q -> {
             Question question = new Question();
             question.setText(q.getText());
