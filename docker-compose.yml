@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password
       PGDATA: /var/lib/postgresql/data
-      POSTGRES_DB: quizz_app
+      POSTGRES_DB: quiz_app
     volumes:
       - postgres:/data/postgres
     ports:

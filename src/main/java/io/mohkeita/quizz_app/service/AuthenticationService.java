@@ -3,6 +3,7 @@ package io.mohkeita.quizz_app.service;
 import io.mohkeita.quizz_app.dto.AuthenticationRequest;
 import io.mohkeita.quizz_app.dto.AuthenticationResponse;
 import io.mohkeita.quizz_app.dto.RegistrationRequest;
+import io.mohkeita.quizz_app.model.RoleName;
 import io.mohkeita.quizz_app.model.Token;
 import io.mohkeita.quizz_app.model.User;
 import io.mohkeita.quizz_app.repository.RoleRepository;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class AuthenticationService {
 
     public void register(RegistrationRequest request) {
 
-        var userRole = roleRepository.findByName("USER")
+        var userRole = roleRepository.findByName(RoleName.USER)
                 // todo - better exception handling
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initialized"));
 
@@ -52,7 +54,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
-                .roles(List.of(userRole))
+                .roles(Collections.singleton(userRole))
                 .build();
 
         userRepository.save(user);

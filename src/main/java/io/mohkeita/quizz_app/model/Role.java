@@ -23,7 +23,7 @@ public class Role {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private RoleName name;
 
     @ManyToMany(mappedBy = "roles")

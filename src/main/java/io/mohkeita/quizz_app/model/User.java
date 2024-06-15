@@ -13,7 +13,9 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -39,7 +41,10 @@ public class User implements UserDetails, Principal {
     private boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

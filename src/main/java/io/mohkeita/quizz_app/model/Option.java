@@ -1,9 +1,6 @@
 package io.mohkeita.quizz_app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -18,4 +15,8 @@ public class Option {
     private Long id;
     private String text;
     private Boolean isCorrect;
+
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private Question question;
 }
