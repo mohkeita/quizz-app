@@ -4,6 +4,7 @@ import io.mohkeita.quizz_app.dto.AuthenticationRequest;
 import io.mohkeita.quizz_app.dto.AuthenticationResponse;
 import io.mohkeita.quizz_app.dto.RegistrationRequest;
 import io.mohkeita.quizz_app.model.Role;
+import io.mohkeita.quizz_app.model.RoleName;
 import io.mohkeita.quizz_app.model.Token;
 import io.mohkeita.quizz_app.model.User;
 import io.mohkeita.quizz_app.repository.RoleRepository;
@@ -84,9 +85,9 @@ class AuthenticationServiceTest {
     @Test
     void testRegister_UserSuccessfullyRegistered() {
         // Mock the role repository to return a role
-        Role userRole = Role.builder().name("USER").build();
+        Role userRole = Role.builder().name(RoleName.USER).build();
 
-        when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
+        when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(userRole));
         when(passwordEncoder.encode(any(String.class))).thenReturn("encodedPassword");
 
         // Mock token repository save method
@@ -102,7 +103,7 @@ class AuthenticationServiceTest {
     @Test
     void testRegister_RoleNotFound_ThrowsException() {
         // Mock the role repository to return an empty optional
-        when(roleRepository.findByName("USER")).thenReturn(Optional.empty());
+        when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.empty());
 
         // Assert that an IllegalStateException is thrown
         assertThrows(IllegalStateException.class, () -> {
